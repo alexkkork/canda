@@ -8,102 +8,92 @@ WHITE='\033[1;37m'
 CYAN='\033[0;36m'
 NC='\033[0m'
 
-# ========== UTILITY ==========
-speak() { command -v say &>/dev/null && say "$1" || echo "$1"; }
-beep() { echo -ne "\a"; }
+# ========== FAKE APP INSTALLATION ==========
+APP_NAME="CandaApp"
+APP_DIR="/Applications/$APP_NAME"
+APP_EXEC="$APP_DIR/$APP_NAME.app"
+APP_PROFILE="$APP_DIR/Profile"
+ICON_FILE="$APP_DIR/icon.png"
+SCRIPT_FILE="$APP_DIR/run_script.sh"
 
-# ========== INIT ==========
-tput civis
-clear
-echo -ne "\033]0;CANDA.HYPER.EXE - INITIALIZING...\007"
-speak "Canda Hyper Mode initializing."
+# ========== LOGO CREATION ==========
+echo -e "${GREEN}Creating application logo...${NC}"
+mkdir -p "$APP_DIR"
+echo -e "${GREEN}Logo created: Green background with C...${NC}"
+convert -size 512x512 xc:#00FF00 -gravity center -pointsize 200 -fill black -annotate +0+0 "C" "$ICON_FILE"
 
-# ========== EXTENDED FAKE DOWNLOAD SEQUENCE ==========
-echo -e "${CYAN}Contacting remote AI server..."
+# ========== FAKE INSTALLATION ==========
+echo -e "${CYAN}Initializing installation...${NC}"
+sleep 2
+echo -e "${CYAN}Verifying system requirements...${NC}"
+sleep 2
+echo -e "${CYAN}Installing dependencies...${NC}"
 sleep 1
-echo -e "${CYAN}Establishing secure uplink..."
-sleep 1.5
+echo -e "${YELLOW}Downloading necessary files...${NC}"
+sleep 2
 
+# Simulating a file download and installation process
 TOTAL=100
 for ((i=1;i<=TOTAL;i++)); do
-    echo -ne "${YELLOW}Downloading Canda_AI_Core.pkg: $i% complete\r"
+    echo -ne "${YELLOW}Installing CandaApp: $i% complete\r"
     sleep 0.05
     if (( $i % 20 == 0 )); then
         beep
     fi
 done
-echo -e "\n${GREEN}Canda AI core download complete.${NC}"
+echo -e "\n${GREEN}Installation complete.${NC}"
 sleep 1
 
-# ========== FAKE FILE EXTRACTION ==========
-echo -e "${CYAN}Extracting AI neural modules..."
-sleep 0.5
-for FILE in "neural-core.dll" "ai_hyperdriver.sys" "quantum_linker.qc" "user_signature.dat" "uplink_sync.pkg"; do
-    echo -e "${YELLOW}→ Extracting $FILE..."
-    sleep 0.7
-done
-echo -e "${GREEN}All modules extracted successfully.${NC}"
-sleep 1
+# Creating a fake Profile inside the app folder
+echo -e "${CYAN}Creating fake profile...${NC}"
+mkdir -p "$APP_PROFILE"
+echo -e "${WHITE}Profile data being written..." > "$APP_PROFILE/profile.txt"
+echo -e "${WHITE}User: $USER" >> "$APP_PROFILE/profile.txt"
+echo -e "${WHITE}App Version: 1.0.0" >> "$APP_PROFILE/profile.txt"
+echo -e "${WHITE}Installation Date: $(date)" >> "$APP_PROFILE/profile.txt"
 
-# ========== DOWNLOAD MUSIC FILE ==========
-MUSIC_URL="https://cdn.pixabay.com/download/audio/2022/03/15/audio_d5f15bcbb7.mp3?filename=horror-tension-suspense-322304.mp3"
-MUSIC_FILE="$HOME/Desktop/horror-tension-suspense-322304.mp3"
+# ========== CREATING SCRIPT FILE TO RUN WHEN APP IS OPENED ==========
+echo -e "${CYAN}Creating script to run on app open...${NC}"
 
-echo -e "${CYAN}Retrieving auditory environment protocols..."
-sleep 1
-if command -v wget &>/dev/null; then
-    wget -q --show-progress "$MUSIC_URL" -O "$MUSIC_FILE"
-elif command -v curl &>/dev/null; then
-    curl -# -L "$MUSIC_URL" -o "$MUSIC_FILE"
+# The fake scary script that will run inside the app
+cat << 'EOF' > "$SCRIPT_FILE"
+#!/bin/bash
+# Scary Script for App
+speak "CandaApp has successfully launched. Preparing critical system update."
+echo -e "${YELLOW}Initiating system update...${NC}"
+sleep 2
+echo -e "${RED}ERROR: Critical failure detected! System breach imminent!${NC}"
+sleep 2
+
+# Fake "revert" option
+echo -e "${WHITE}Do you want to revert this operation? (y/n):"
+read -r revert_choice
+if [[ "$revert_choice" == "y" || "$revert_choice" == "Y" ]]; then
+    echo -e "${CYAN}Reverting system changes...${NC}"
+    sleep 2
+    echo -e "${GREEN}Changes successfully reverted.${NC}"
 else
-    echo -e "${RED}Error: Neither wget nor curl is installed!${NC}"
-    exit 1
+    echo -e "${RED}Error: Reverting failed. System damage irreversible.${NC}"
 fi
-echo -e "${GREEN}Auditory protocol secured.${NC}"
-sleep 1
 
-# ========== PLAY MUSIC VIA APPLE MUSIC ==========
-osascript <<EOF
-tell application "Music"
-    activate
-    open POSIX file "$MUSIC_FILE"
-    play
-end tell
-EOF
-
-# ========== LOADING SCREEN ==========
-echo -e "${CYAN}Activating neural uplink..."
-for i in {1..80}; do
-  echo -ne "${RED}▓"
-  beep
-  sleep 0.015
-done
-echo -e " ${GREEN}[LINK ESTABLISHED]${NC}"
-sleep 1
-
-# ========== BREACH PRANK ==========
-echo -e "${CYAN}Scanning personal data for exploitation..."
-sleep 2
-speak "User identified. Preparing data leak."
+# ========== FAKE SYSTEM BREACH ==========
+echo -e "${CYAN}Scanning for personal data...${NC}"
+sleep 3
+speak "Personal data being extracted. You have been compromised."
 for i in {1..10}; do
-  echo -e "${RED}█ █ █ █ █ SYSTEM BREACH █ █ █ █ █"
-  beep
-  sleep 0.08
+    echo -e "${RED}█ █ █ █ █ SYSTEM BREACH █ █ █ █ █"
+    beep
+    sleep 0.08
 done
-
-clear
-echo -e "${YELLOW}LEAKING DATA... PERSONAL INFORMATION COMPROMISED!"
-speak "Warning. Data breach detected."
-sleep 2
 
 # ========== FAKE SHUTDOWN ==========
+echo -e "${CYAN}Shutting down system in 5 seconds...${NC}"
 for i in {5..1}; do
   echo -e "${RED}SYSTEM WILL SHUTDOWN IN $i..."
   beep
   sleep 1
 done
 
-# ========== BLUE SCREEN ==========
 clear
 echo -e "${RED}UNEXPECTED ERROR: SYSTEM CORRUPTED"
 echo -e "${YELLOW}ERROR CODE: 0xDEAD"
@@ -115,11 +105,56 @@ for i in {1..20}; do
   sleep 0.1
 done
 
-# ========== GOTCHA ==========
 clear
 speak "Just kidding."
 echo -e "${GREEN}💥 GOTCHA!"
 echo -e "${WHITE}No systems were harmed.${NC}"
+EOF
 
-tput cnorm
-echo -ne "\033]0;Terminal Restored\007"
+# Make the script executable
+chmod +x "$SCRIPT_FILE"
+
+# ========== CREATING APP WITH APPLESCRIPT TO RUN SCRIPT ==========
+echo -e "${CYAN}Creating app bundle to run the script...${NC}"
+
+mkdir -p "$APP_EXEC/Contents/MacOS"
+mkdir -p "$APP_EXEC/Contents/Resources"
+mkdir -p "$APP_EXEC/Contents/Info.plist"
+
+# Create AppleScript that runs the fake script inside the app
+cat << EOF > "$APP_EXEC/Contents/MacOS/StartApp.scpt"
+tell application "Terminal"
+    do script "$SCRIPT_FILE"
+    activate
+end tell
+EOF
+
+# Create Info.plist for the app bundle (Basic app info)
+cat << EOF > "$APP_EXEC/Contents/Info.plist"
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0">
+<dict>
+    <key>CFBundleName</key>
+    <string>$APP_NAME</string>
+    <key>CFBundleExecutable</key>
+    <string>StartApp.scpt</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.fakeapp.candaapp</string>
+    <key>CFBundleVersion</key>
+    <string>1.0.0</string>
+</dict>
+</plist>
+EOF
+
+# Set the icon for the app (use the previously created logo)
+cp "$ICON_FILE" "$APP_EXEC/Contents/Resources/icon.icns"
+
+# ========== SIMULATE OPENING THE APP ==========
+echo -e "${CYAN}Opening $APP_NAME...${NC}"
+osascript <<EOF
+tell application "Finder"
+    open POSIX file "$APP_EXEC"
+end tell
+EOF
+
+echo -e "${GREEN}CandaApp installation complete. Enjoy the experience!${NC}"
