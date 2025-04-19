@@ -1,88 +1,28 @@
 #!/bin/bash
 
-APP_NAME="CandaHyperPrank"
-APP_DIR="$HOME/Applications/$APP_NAME.app"
-EXEC_DIR="$APP_DIR/Contents/MacOS"
-RES_DIR="$APP_DIR/Contents/Resources"
-PLIST_PATH="$APP_DIR/Contents/Info.plist"
+APP_NAME="Canda"
+ORIG_APP="/System/Applications/Utilities/Terminal.app"
+NEW_APP="$HOME/Applications/$APP_NAME.app"
+ICON_PATH="$HOME/Desktop/Canda.icns"  # <-- place your green C icon here
 
-# Clean any existing app
-rm -rf "$APP_DIR"
+# 1. Copy Terminal to a new app called Canda
+echo "Copying Terminal to $NEW_APP..."
+cp -R "$ORIG_APP" "$NEW_APP"
 
-# Create directories
-mkdir -p "$EXEC_DIR"
-mkdir -p "$RES_DIR"
+# 2. Replace the icon if it exists
+if [ -f "$ICON_PATH" ]; then
+  echo "Replacing icon..."
+  cp "$ICON_PATH" "$NEW_APP/Contents/Resources/Terminal.icns"
+else
+  echo "⚠️  Icon file $ICON_PATH not found — skipping icon replacement."
+fi
 
-# Create the prank payload script
-cat << 'EOF' > "$RES_DIR/run.sh"
-#!/bin/bash
-clear
-echo "Initializing Hyper Mode..."
-sleep 1
-for i in {1..100}; do
-  echo -ne "Installing Canda_AI_Core: $i% complete\r"
-  sleep 0.03
-done
-say "Canda Hyper Mode is now active"
-sleep 1
-echo "
- ███████████████████████
- █ SYSTEM BREACH ALERT █
- ███████████████████████
-"
-sleep 1
-say "Data breach detected."
-for i in {1..15}; do
-  echo "█ █ █ SYSTEM BREACH █ █ █"
-  sleep 0.08
-done
-echo "FATAL ERROR: SYSTEM CORRUPTED"
-say "Fatal error. Shutting down."
-for i in {5..1}; do
-  echo "Shutdown in $i..."
-  sleep 1
-done
-echo "💥 GOTCHA! No systems were harmed."
-say "Just kidding."
-EOF
+# 3. Remove quarantine attributes
+xattr -cr "$NEW_APP"
 
-chmod +x "$RES_DIR/run.sh"
+# 4. Re-sign the app (optional but recommended)
+codesign --force --deep --sign - "$NEW_APP"
 
-# Create the MacOS launcher script
-cat << EOF > "$EXEC_DIR/launcher"
-#!/bin/bash
-open -a Terminal "$RES_DIR/run.sh"
-EOF
-
-chmod +x "$EXEC_DIR/launcher"
-
-# Create Info.plist
-cat << EOF > "$PLIST_PATH"
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
- "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-  <key>CFBundleName</key>
-  <string>$APP_NAME</string>
-  <key>CFBundleIdentifier</key>
-  <string>com.fake.$APP_NAME</string>
-  <key>CFBundleVersion</key>
-  <string>1.0</string>
-  <key>CFBundlePackageType</key>
-  <string>APPL</string>
-  <key>CFBundleExecutable</key>
-  <string>launcher</string>
-</dict>
-</plist>
-EOF
-
-# Remove quarantine attribute
-xattr -cr "$APP_DIR"
-
-# Ad-hoc codesign (optional but helps Gatekeeper)
-codesign --force --deep --sign - "$APP_DIR"
-
-# Done
-echo "✅ $APP_NAME installed to $APP_DIR"
-open "$APP_DIR"
+# 5. Done
+echo "✅ $APP_NAME.app created at $NEW_APP"
+open "$NEW_APP"
