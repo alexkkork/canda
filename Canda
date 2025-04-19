@@ -1,1 +1,2 @@
+#!/bin/bash
 osascript -e 'tell app "System Events" to display dialog "Dont run random scripts from discord kids"'
