@@ -12,21 +12,27 @@ mkdir -p "$APP_PATH/Contents/MacOS"
 mkdir -p "$APP_PATH/Contents/Resources"
 mkdir -p "$APP_PATH/Contents/Info.plist"
 
-# Step 2: Create the AppleScript to execute your prank shell script
-echo "Creating AppleScript to execute prank shell script..."
-cat <<EOF > "$APP_PATH/Contents/MacOS/launch_prank.scpt"
-do shell script "sh $SCRIPT_PATH"
+# Step 2: Create a shell script to execute the prank shell script
+echo "Creating shell script to execute prank shell script..."
+cat <<EOF > "$APP_PATH/Contents/MacOS/$APP_NAME"
+#!/bin/bash
+sh "$SCRIPT_PATH"
 EOF
 
-# Step 3: Set the app icon
+# Step 3: Make the shell script executable
+chmod +x "$APP_PATH/Contents/MacOS/$APP_NAME"
+
+# Step 4: Set the app icon
 if [ -f "$ICON_PATH" ]; then
   echo "Setting custom icon..."
-  cp "$ICON_PATH" "$APP_PATH/Contents/Resources/Canda.icns"
+  cp "$ICON_PATH" "$APP_PATH/Contents/Resources/$APP_NAME.icns"
+  # Set custom icon using SetFile
+  SetFile -a C "$APP_PATH"
 else
   echo "⚠️ Icon file not found at $ICON_PATH. Skipping icon replacement."
 fi
 
-# Step 4: Create the Info.plist file
+# Step 5: Create the Info.plist file
 echo "Creating Info.plist..."
 cat <<EOF > "$APP_PATH/Contents/Info.plist"
 <?xml version="1.0" encoding="UTF-8"?>
@@ -39,9 +45,9 @@ cat <<EOF > "$APP_PATH/Contents/Info.plist"
     <key>CFBundleIdentifier</key>
     <string>com.example.$APP_NAME</string>
     <key>CFBundleExecutable</key>
-    <string>launch_prank.scpt</string>
+    <string>$APP_NAME</string>
     <key>CFBundleIconFile</key>
-    <string>Canda.icns</string>
+    <string>$APP_NAME.icns</string>
     <key>CFBundleVersion</key>
     <string>1.0</string>
     <key>CFBundlePackageType</key>
@@ -50,14 +56,14 @@ cat <<EOF > "$APP_PATH/Contents/Info.plist"
 </plist>
 EOF
 
-# Step 5: Remove quarantine attributes from the new app
+# Step 6: Remove quarantine attributes from the new app
 echo "Removing quarantine flags..."
 xattr -cr "$APP_PATH"
 
-# Step 6: Re-sign the app to ensure it can be opened
+# Step 7: Re-sign the app to ensure it can be opened
 echo "Re-signing the app..."
 codesign --force --deep --sign - "$APP_PATH"
 
-# Step 7: Open the new app
+# Step 8: Open the new app
 echo "Canda.app created successfully at $APP_PATH"
 open "$APP_PATH"
