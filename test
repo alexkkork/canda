@@ -4,7 +4,8 @@
 APP_NAME="AstrologyApp"
 APP_PATH="$HOME/Applications/$APP_NAME.app"
 ICON_PATH="$HOME/Desktop/AstrologyIcon.icns"  # <-- Path to your astrology app icon file
-HOROSCOPE_API_URL="https://aztro.sameerkumar.website"  # Public API to get daily horoscopes
+API_KEY="YzThVJpbal1tia1A08WCY3fzxgcgp4FH6fgzDLyl"  # Your API key
+HOROSCOPE_API_URL="https://freeastrologyapi.com/api/horoscope"
 
 # Step 1: Create the app structure
 echo "Creating app bundle structure..."
@@ -22,9 +23,15 @@ echo "Welcome to the Astrology App!"
 echo "Please enter your zodiac sign (e.g., Aries, Taurus, etc.):"
 read ZODIAC_SIGN
 
-# Fetch the daily horoscope using the Aztro API
+# Fetch the daily horoscope using the Free Astrology API
 echo "Fetching your daily horoscope for $ZODIAC_SIGN..."
-RESPONSE=\$(curl -s -X POST -d "sign=$ZODIAC_SIGN&day=today" $HOROSCOPE_API_URL)
+RESPONSE=\$(curl -s -X GET "$HOROSCOPE_API_URL?sign=\$ZODIAC_SIGN&apiKey=$API_KEY")
+
+# Check if the response was valid (if there's no error)
+if [[ \$RESPONSE == *"error"* ]]; then
+  echo "Error: Unable to fetch horoscope. Please check your zodiac sign and try again."
+  exit 1
+fi
 
 # Extract the horoscope from the API response
 HOROSCOPE=\$(echo \$RESPONSE | jq -r '.horoscope')
@@ -32,7 +39,6 @@ HOROSCOPE=\$(echo \$RESPONSE | jq -r '.horoscope')
 # Display the horoscope
 echo "Here's your daily horoscope:"
 echo "\$HOROSCOPE"
-
 EOF
 
 # Step 3: Make the shell script executable
