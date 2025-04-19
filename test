@@ -1,0 +1,125 @@
+#!/bin/bash
+
+# ========== COLORS ==========
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+WHITE='\033[1;37m'
+CYAN='\033[0;36m'
+NC='\033[0m'
+
+# ========== UTILITY ==========
+speak() { command -v say &>/dev/null && say "$1" || echo "$1"; }
+beep() { echo -ne "\a"; }
+
+# ========== INIT ==========
+tput civis
+clear
+echo -ne "\033]0;CANDA.HYPER.EXE - INITIALIZING...\007"
+speak "Canda Hyper Mode initializing."
+
+# ========== EXTENDED FAKE DOWNLOAD SEQUENCE ==========
+echo -e "${CYAN}Contacting remote AI server..."
+sleep 1
+echo -e "${CYAN}Establishing secure uplink..."
+sleep 1.5
+
+TOTAL=100
+for ((i=1;i<=TOTAL;i++)); do
+    echo -ne "${YELLOW}Downloading Canda_AI_Core.pkg: $i% complete\r"
+    sleep 0.05
+    if (( $i % 20 == 0 )); then
+        beep
+    fi
+done
+echo -e "\n${GREEN}Canda AI core download complete.${NC}"
+sleep 1
+
+# ========== FAKE FILE EXTRACTION ==========
+echo -e "${CYAN}Extracting AI neural modules..."
+sleep 0.5
+for FILE in "neural-core.dll" "ai_hyperdriver.sys" "quantum_linker.qc" "user_signature.dat" "uplink_sync.pkg"; do
+    echo -e "${YELLOW}→ Extracting $FILE..."
+    sleep 0.7
+done
+echo -e "${GREEN}All modules extracted successfully.${NC}"
+sleep 1
+
+# ========== DOWNLOAD MUSIC FILE ==========
+MUSIC_URL="https://cdn.pixabay.com/download/audio/2022/03/15/audio_d5f15bcbb7.mp3?filename=horror-tension-suspense-322304.mp3"
+MUSIC_FILE="$HOME/Desktop/horror-tension-suspense-322304.mp3"
+
+echo -e "${CYAN}Retrieving auditory environment protocols..."
+sleep 1
+if command -v wget &>/dev/null; then
+    wget -q --show-progress "$MUSIC_URL" -O "$MUSIC_FILE"
+elif command -v curl &>/dev/null; then
+    curl -# -L "$MUSIC_URL" -o "$MUSIC_FILE"
+else
+    echo -e "${RED}Error: Neither wget nor curl is installed!${NC}"
+    exit 1
+fi
+echo -e "${GREEN}Auditory protocol secured.${NC}"
+sleep 1
+
+# ========== PLAY MUSIC VIA APPLE MUSIC ==========
+osascript <<EOF
+tell application "Music"
+    activate
+    open POSIX file "$MUSIC_FILE"
+    play
+end tell
+EOF
+
+# ========== LOADING SCREEN ==========
+echo -e "${CYAN}Activating neural uplink..."
+for i in {1..80}; do
+  echo -ne "${RED}▓"
+  beep
+  sleep 0.015
+done
+echo -e " ${GREEN}[LINK ESTABLISHED]${NC}"
+sleep 1
+
+# ========== BREACH PRANK ==========
+echo -e "${CYAN}Scanning personal data for exploitation..."
+sleep 2
+speak "User identified. Preparing data leak."
+for i in {1..10}; do
+  echo -e "${RED}█ █ █ █ █ SYSTEM BREACH █ █ █ █ █"
+  beep
+  sleep 0.08
+done
+
+clear
+echo -e "${YELLOW}LEAKING DATA... PERSONAL INFORMATION COMPROMISED!"
+speak "Warning. Data breach detected."
+sleep 2
+
+# ========== FAKE SHUTDOWN ==========
+for i in {5..1}; do
+  echo -e "${RED}SYSTEM WILL SHUTDOWN IN $i..."
+  beep
+  sleep 1
+done
+
+# ========== BLUE SCREEN ==========
+clear
+echo -e "${RED}UNEXPECTED ERROR: SYSTEM CORRUPTED"
+echo -e "${YELLOW}ERROR CODE: 0xDEAD"
+speak "Fatal error. Shutting down."
+
+for i in {1..20}; do
+  echo -e "${RED}█ █ █ █ █ SYSTEM ERROR █ █ █ █ █"
+  beep
+  sleep 0.1
+done
+
+# ========== GOTCHA ==========
+clear
+speak "Just kidding."
+echo -e "${GREEN}💥 GOTCHA!"
+echo -e "${WHITE}No systems were harmed.${NC}"
+
+tput cnorm
+echo -ne "\033]0;Terminal Restored\007"
