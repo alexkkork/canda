@@ -16,7 +16,14 @@ mkdir -p "$APP_PATH/Contents/Info.plist"
 echo "Creating shell script to execute prank shell script..."
 cat <<EOF > "$APP_PATH/Contents/MacOS/$APP_NAME"
 #!/bin/bash
+# Debugging: Log the start of the script
+echo "Launching prank script..." >> /tmp/Canda_log.txt
+
+# Run the prank shell script and keep the terminal open
 sh "$SCRIPT_PATH"
+
+# Debugging: Log the completion of the script
+echo "Prank script completed. Exiting..." >> /tmp/Canda_log.txt
 EOF
 
 # Step 3: Make the shell script executable
