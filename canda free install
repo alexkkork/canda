@@ -1,0 +1,81 @@
+#!/bin/bash
+
+# Terminal Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+clear
+
+# Creepy welcome
+echo -e "${RED}"
+echo "███████╗ █████╗ ███╗   ██╗██████╗  █████╗ "
+echo "██╔════╝██╔══██╗████╗  ██║██╔══██╗██╔══██╗"
+echo "███████╗███████║██╔██╗ ██║██║  ██║███████║"
+echo "╚════██║██╔══██║██║╚██╗██║██║  ██║██╔══██║"
+echo "███████║██║  ██║██║ ╚████║██████╔╝██║  ██║"
+echo "╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ ╚═╝  ╚═╝"
+echo -e "${YELLOW}      C A N D A   I N S T A L L E R${NC}"
+echo
+say "Welcome. Initiating Canda virus install."
+
+sleep 2
+
+echo -e "${YELLOW}Connecting to dark web nodes...${NC}"
+sleep 2
+echo -e "${GREEN}[✓] Node 01"
+sleep 1
+echo -e "[✓] Node 02"
+sleep 1
+echo -e "[✓] Node 03"
+sleep 1
+
+say "Canda payload injection started."
+
+# Fake installation
+echo -e "${YELLOW}Installing Canda virus...${NC}"
+for i in {1..10}; do
+  echo -ne "${RED}█"
+  sleep 0.3
+done
+echo -e " ${GREEN}[DONE]${NC}"
+sleep 1
+
+echo -e "${RED}Injecting into kernel modules..."
+say "Injecting Canda into kernel modules"
+sleep 3
+
+echo -e "${RED}Bypassing firewalls..."
+say "Bypassing firewalls"
+sleep 2
+
+echo -e "${RED}Activating trojan payload..."
+say "Trojan payload activated"
+sleep 2
+
+# Fake error and glitch
+echo -e "${RED}!! ERROR: Malware contained in core processes !!${NC}"
+say "Error. Unauthorized malware detected."
+sleep 2
+echo -e "${RED}Attempting system override...${NC}"
+sleep 2
+
+# Spooky sequence
+say "You shouldn't have installed Canda"
+echo -e "${RED}"
+for i in {1..5}; do
+  echo "█ █ █ SYSTEM FAILURE █ █ █"
+  sleep 0.3
+done
+
+echo -e "$ {nc}"
+say "Canda has taken over your system. Say goodbye."
+
+# Dramatic pause
+sleep 3
+
+echo -e "${GREEN}Just kidding. This was a prank. :)${NC}"
+say "Just kidding. This was a prank."
+
+echo -e "${YELLOW}Thanks for installing Canda. Have a spooky day.${NC}"
