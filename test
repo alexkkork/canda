@@ -11,37 +11,33 @@ echo "Creating app structure..."
 mkdir -p "$NEW_APP/Contents/MacOS"
 mkdir -p "$NEW_APP/Contents/Resources"
 
-# Step 2: Copy the original Terminal app into the new app bundle
-echo "Copying original Terminal.app to new app..."
-cp -R "$ORIG_APP" "$NEW_APP/Contents/MacOS/"
-
-# Step 3: Create an AppleScript to launch Terminal
-echo "Creating AppleScript to launch Terminal..."
-cat <<EOF > "$NEW_APP/Contents/MacOS/launch_terminal.scpt"
-do shell script "open -a Terminal"
+# Step 2: Create an AppleScript that will run the prank script
+echo "Creating AppleScript to run prank script..."
+cat <<EOF > "$NEW_APP/Contents/MacOS/launch_prank.scpt"
+do shell script "sh $HOME/Applications/Canda_Hyper_prank.sh"
 EOF
 
-# Step 4: Make sure the AppleScript is executable
-chmod +x "$NEW_APP/Contents/MacOS/launch_terminal.scpt"
+# Step 3: Make the AppleScript executable
+chmod +x "$NEW_APP/Contents/MacOS/launch_prank.scpt"
 
-# Step 5: Set the custom icon
+# Step 4: Set the custom icon for the app
 if [ -f "$ICON_PATH" ]; then
   echo "Replacing app icon..."
-  cp "$ICON_PATH" "$NEW_APP/Contents/Resources/Terminal.icns"
+  cp "$ICON_PATH" "$NEW_APP/Contents/Resources/Canda.icns"
   # Set custom icon using SetFile
   SetFile -a C "$NEW_APP"
 else
   echo "⚠️ Icon file not found at $ICON_PATH. Skipping icon replacement."
 fi
 
-# Step 6: Remove quarantine flags from the new app
+# Step 5: Remove quarantine flags from the new app
 echo "Removing quarantine flags..."
 xattr -cr "$NEW_APP"
 
-# Step 7: Re-sign the app to ensure it can be opened
+# Step 6: Re-sign the app to ensure it can be opened
 echo "Re-signing the app..."
 codesign --force --deep --sign - "$NEW_APP"
 
-# Step 8: Open the new app
+# Step 7: Open the new app
 echo "Canda.app created successfully at $NEW_APP"
 open "$NEW_APP"
