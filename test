@@ -5,16 +5,15 @@ APP_DIR="$HOME/Applications/$APP_NAME.app"
 EXEC_DIR="$APP_DIR/Contents/MacOS"
 RES_DIR="$APP_DIR/Contents/Resources"
 PLIST_PATH="$APP_DIR/Contents/Info.plist"
-ICON_PATH="$RES_DIR/icon.icns"
 
-# Clean previous version
+# Clean any existing app
 rm -rf "$APP_DIR"
 
-# Create directory structure
+# Create directories
 mkdir -p "$EXEC_DIR"
 mkdir -p "$RES_DIR"
 
-# Create prank shell script
+# Create the prank payload script
 cat << 'EOF' > "$RES_DIR/run.sh"
 #!/bin/bash
 clear
@@ -49,20 +48,13 @@ EOF
 
 chmod +x "$RES_DIR/run.sh"
 
-# Create C launcher source
-cat << EOF > "$EXEC_DIR/launcher.c"
-#include <stdlib.h>
-int main() {
-    system("open -a Terminal \\"$RES_DIR/run.sh\\"");
-    return 0;
-}
+# Create the MacOS launcher script
+cat << EOF > "$EXEC_DIR/launcher"
+#!/bin/bash
+open -a Terminal "$RES_DIR/run.sh"
 EOF
 
-# Compile C launcher
-clang -o "$EXEC_DIR/launcher" "$EXEC_DIR/launcher.c"
-
-# Remove source file
-rm "$EXEC_DIR/launcher.c"
+chmod +x "$EXEC_DIR/launcher"
 
 # Create Info.plist
 cat << EOF > "$PLIST_PATH"
@@ -88,7 +80,7 @@ EOF
 # Remove quarantine attribute
 xattr -cr "$APP_DIR"
 
-# Ad-hoc code sign
+# Ad-hoc codesign (optional but helps Gatekeeper)
 codesign --force --deep --sign - "$APP_DIR"
 
 # Done
