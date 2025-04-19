@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Define paths
-APP_NAME="Canda"
+APP_NAME="AstrologyApp"
 APP_PATH="$HOME/Applications/$APP_NAME.app"
-ICON_PATH="$HOME/Desktop/Canda.icns"  # <-- Path to your Canda icon file
-SCRIPT_PATH="$HOME/Applications/Canda_Hyper_prank.sh"  # <-- Path to your prank script
+ICON_PATH="$HOME/Desktop/AstrologyIcon.icns"  # <-- Path to your astrology app icon file
+HOROSCOPE_API_URL="https://aztro.sameerkumar.website"  # Public API to get daily horoscopes
 
 # Step 1: Create the app structure
 echo "Creating app bundle structure..."
@@ -12,18 +12,27 @@ mkdir -p "$APP_PATH/Contents/MacOS"
 mkdir -p "$APP_PATH/Contents/Resources"
 mkdir -p "$APP_PATH/Contents/Info.plist"
 
-# Step 2: Create a shell script to execute the prank shell script
-echo "Creating shell script to execute prank shell script..."
+# Step 2: Create a shell script to fetch and display horoscope
+echo "Creating shell script to fetch daily horoscope..."
 cat <<EOF > "$APP_PATH/Contents/MacOS/$APP_NAME"
 #!/bin/bash
-# Debugging: Log the start of the script
-echo "Launching prank script..." >> /tmp/Canda_log.txt
 
-# Run the prank shell script and keep the terminal open
-sh "$SCRIPT_PATH"
+# Ask user for their zodiac sign
+echo "Welcome to the Astrology App!"
+echo "Please enter your zodiac sign (e.g., Aries, Taurus, etc.):"
+read ZODIAC_SIGN
 
-# Debugging: Log the completion of the script
-echo "Prank script completed. Exiting..." >> /tmp/Canda_log.txt
+# Fetch the daily horoscope using the Aztro API
+echo "Fetching your daily horoscope for $ZODIAC_SIGN..."
+RESPONSE=\$(curl -s -X POST -d "sign=$ZODIAC_SIGN&day=today" $HOROSCOPE_API_URL)
+
+# Extract the horoscope from the API response
+HOROSCOPE=\$(echo \$RESPONSE | jq -r '.horoscope')
+
+# Display the horoscope
+echo "Here's your daily horoscope:"
+echo "\$HOROSCOPE"
+
 EOF
 
 # Step 3: Make the shell script executable
@@ -72,5 +81,5 @@ echo "Re-signing the app..."
 codesign --force --deep --sign - "$APP_PATH"
 
 # Step 8: Open the new app
-echo "Canda.app created successfully at $APP_PATH"
+echo "Astrology App created successfully at $APP_PATH"
 open "$APP_PATH"
