@@ -7,7 +7,7 @@ ICON_PATH="$HOME/Desktop/AstrologyIcon.icns"  # <-- Path to your astrology app i
 API_KEY="YzThVJpbal1tia1A08WCY3fzxgcgp4FH6fgzDLyl"  # Your API key
 HOROSCOPE_API_URL="https://freeastrologyapi.com/api/horoscope"
 
-# Step 1: Create the app structure
+# Step 1: Create the app bundle structure
 echo "Creating app bundle structure..."
 mkdir -p "$APP_PATH/Contents/MacOS"
 mkdir -p "$APP_PATH/Contents/Resources"
@@ -24,7 +24,7 @@ echo "Please enter your zodiac sign (e.g., Aries, Taurus, etc.):"
 read ZODIAC_SIGN
 
 # Fetch the daily horoscope using the Free Astrology API
-echo "Fetching your daily horoscope for $ZODIAC_SIGN..."
+echo "Fetching your daily horoscope for \$ZODIAC_SIGN..."
 RESPONSE=\$(curl -s -X GET "$HOROSCOPE_API_URL?sign=\$ZODIAC_SIGN&apiKey=$API_KEY")
 
 # Check if the response was valid (if there's no error)
@@ -44,7 +44,7 @@ EOF
 # Step 3: Make the shell script executable
 chmod +x "$APP_PATH/Contents/MacOS/$APP_NAME"
 
-# Step 4: Set the app icon
+# Step 4: Set the app icon (optional)
 if [ -f "$ICON_PATH" ]; then
   echo "Setting custom icon..."
   cp "$ICON_PATH" "$APP_PATH/Contents/Resources/$APP_NAME.icns"
@@ -61,15 +61,15 @@ cat <<EOF > "$APP_PATH/Contents/Info.plist"
 <plist version="1.0">
   <dict>
     <key>CFBundleName</key>
-    <string>$APP_NAME</string>
+    <string>AstrologyApp</string>
     <key>CFBundleDisplayName</key>
-    <string>$APP_NAME</string>
+    <string>AstrologyApp</string>
     <key>CFBundleIdentifier</key>
-    <string>com.example.$APP_NAME</string>
+    <string>com.example.AstrologyApp</string>
     <key>CFBundleExecutable</key>
-    <string>$APP_NAME</string>
+    <string>AstrologyApp</string>
     <key>CFBundleIconFile</key>
-    <string>$APP_NAME.icns</string>
+    <string>AstrologyApp.icns</string>
     <key>CFBundleVersion</key>
     <string>1.0</string>
     <key>CFBundlePackageType</key>
