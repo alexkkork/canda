@@ -1,101 +1,37 @@
 #!/bin/bash
 
-# ========== VARIABLES ==========
 APP_NAME="CandaApp"
 APP_PATH="$HOME/Desktop/$APP_NAME.app"
 EXECUTABLE_PATH="$APP_PATH/Contents/MacOS/launcher"
-ICON_PATH="$APP_PATH/Contents/Resources/icon.icns"
 PLIST_PATH="$APP_PATH/Contents/Info.plist"
 
-# ========== CLEANUP IF EXISTS ==========
-if [ -d "$APP_PATH" ]; then
-  echo "Removing existing app..."
-  rm -rf "$APP_PATH"
-fi
+# Remove existing app if present
+rm -rf "$APP_PATH"
 
-# ========== CREATE APP STRUCTURE ==========
-echo "Creating app bundle..."
+# Create .app structure
 mkdir -p "$APP_PATH/Contents/MacOS"
 mkdir -p "$APP_PATH/Contents/Resources"
 
-# ========== CREATE EXECUTABLE SCRIPT ==========
-echo "Writing executable script..."
+# Create executable launcher script
 cat << 'EOF' > "$EXECUTABLE_PATH"
 #!/bin/bash
-
-# ========== COLORS ==========
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-CYAN='\033[0;36m'
-NC='\033[0m'
-
-beep() { echo -ne "\a"; }
-
-# ========== START TERMINAL PAYLOAD ==========
 osascript -e 'tell application "Terminal"
     do script "
         clear
-        echo -e \"${CYAN}Initializing Canda Hyper Mode...\"
-        say \"Canda Hyper Mode initializing\"
+        echo Initializing Hyper Mode...
         sleep 2
-
-        echo -e \"${YELLOW}Establishing neural uplink...\"
+        echo Downloading AI core...
         sleep 2
-
         for i in {1..100}; do
-          echo -ne \"${YELLOW}Installing Canda AI Core: \$i% complete\r\"
+          echo -ne \"Installing: \$i% complete\\r\"
           sleep 0.03
-          if (( \$i % 20 == 0 )); then
-            echo -ne \"\\a\"
-          fi
         done
-
-        echo -e \"\n${GREEN}Installation complete.\"
+        echo \"
+        COMPLETE.
+        \"
         sleep 1
-
-        echo -e \"${CYAN}Scanning personal data...\"
-        sleep 2
-        say \"User identified. Preparing data leak.\"
-        for i in {1..8}; do
-          echo -e \"${RED}█ █ █ █ █ SYSTEM BREACH █ █ █ █ █\"
-          echo -ne \"\\a\"
-          sleep 0.08
-        done
-
-        echo -e \"${YELLOW}Do you want to revert the operation? (y/n):\"
-        read choice
-        if [[ \\\"\$choice\\\" == \\\"y\\\" || \\\"\$choice\\\" == \\\"Y\\\" ]]; then
-          echo -e \"${GREEN}Reverting changes...\"
-          sleep 2
-          echo -e \"${GREEN}System restored.\"
-        else
-          echo -e \"${RED}Error: Could not revert changes. System failure imminent.\"
-          sleep 1
-        fi
-
-        echo -e \"${CYAN}Simulating system crash...\"
-        sleep 2
-
-        for i in {5..1}; do
-          echo -e \"${RED}SYSTEM SHUTDOWN IN \$i...\"
-          echo -ne \"\\a\"
-          sleep 1
-        done
-
-        clear
-        echo -e \"${RED}UNEXPECTED ERROR: SYSTEM CORRUPTED\"
-        say \"Fatal error. Shutting down\"
-        for i in {1..20}; do
-          echo -e \"${RED}█ █ █ █ █ SYSTEM ERROR █ █ █ █ █\"
-          echo -ne \"\\a\"
-          sleep 0.1
-        done
-
-        clear
-        say \\\"Just kidding\\\"
-        echo -e \"${GREEN}💥 GOTCHA!\"
-        echo -e \"${CYAN}No systems were harmed.${NC}\"
+        echo 'This is a prank!'
+        say \"This is a prank!\"
     "
     activate
 end tell'
@@ -103,8 +39,7 @@ EOF
 
 chmod +x "$EXECUTABLE_PATH"
 
-# ========== CREATE Info.plist ==========
-echo "Creating Info.plist..."
+# Create Info.plist
 cat << EOF > "$PLIST_PATH"
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
@@ -116,33 +51,23 @@ cat << EOF > "$PLIST_PATH"
     <key>CFBundleDisplayName</key>
     <string>$APP_NAME</string>
     <key>CFBundleIdentifier</key>
-    <string>com.fakeapp.candaapp</string>
+    <string>com.fake.candaapp</string>
     <key>CFBundleVersion</key>
     <string>1.0</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleExecutable</key>
     <string>launcher</string>
-    <key>CFBundleIconFile</key>
-    <string>icon</string>
   </dict>
 </plist>
 EOF
 
-# ========== OPTIONAL: CREATE ICON ==========
-echo "Generating icon..."
-if command -v sips &> /dev/null; then
-  ICON_TEMP="$HOME/Desktop/icon.png"
-  ICON_ICNS="$ICON_PATH"
-  # Create simple green background with a C
-  sips -Z 512 --padColor FFFFFF --padToHeightWidth 512 512 --format png /System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/GenericApplicationIcon.icns --out "$ICON_TEMP"
-  sips -s format icns "$ICON_TEMP" --out "$ICON_ICNS"
-  rm "$ICON_TEMP"
-  echo "Icon created."
-else
-  echo "sips not found. No icon applied."
-fi
+# Remove quarantine attribute (critical!)
+xattr -cr "$APP_PATH"
 
-# ========== DONE ==========
-echo "App created successfully at: $APP_PATH"
+# (Optional) Codesign it ad-hoc so macOS Gatekeeper accepts it
+codesign --force --deep --sign - "$APP_PATH"
+
+# Done
+echo "✅ $APP_NAME created successfully at: $APP_PATH"
 open "$APP_PATH"
