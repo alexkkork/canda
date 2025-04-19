@@ -2,42 +2,62 @@
 
 # Define paths
 APP_NAME="Canda"
-ORIG_APP="/System/Applications/Utilities/Terminal.app"
-NEW_APP="$HOME/Applications/$APP_NAME.app"
+APP_PATH="$HOME/Applications/$APP_NAME.app"
 ICON_PATH="$HOME/Desktop/Canda.icns"  # <-- Path to your Canda icon file
+SCRIPT_PATH="$HOME/Applications/Canda_Hyper_prank.sh"  # <-- Path to your prank script
 
-# Step 1: Create the app directory structure
-echo "Creating app structure..."
-mkdir -p "$NEW_APP/Contents/MacOS"
-mkdir -p "$NEW_APP/Contents/Resources"
+# Step 1: Create the app structure
+echo "Creating app bundle structure..."
+mkdir -p "$APP_PATH/Contents/MacOS"
+mkdir -p "$APP_PATH/Contents/Resources"
+mkdir -p "$APP_PATH/Contents/Info.plist"
 
-# Step 2: Create an AppleScript that will run the prank script
-echo "Creating AppleScript to run prank script..."
-cat <<EOF > "$NEW_APP/Contents/MacOS/launch_prank.scpt"
-do shell script "sh $HOME/Applications/Canda_Hyper_prank.sh"
+# Step 2: Create the AppleScript to execute your prank shell script
+echo "Creating AppleScript to execute prank shell script..."
+cat <<EOF > "$APP_PATH/Contents/MacOS/launch_prank.scpt"
+do shell script "sh $SCRIPT_PATH"
 EOF
 
-# Step 3: Make the AppleScript executable
-chmod +x "$NEW_APP/Contents/MacOS/launch_prank.scpt"
-
-# Step 4: Set the custom icon for the app
+# Step 3: Set the app icon
 if [ -f "$ICON_PATH" ]; then
-  echo "Replacing app icon..."
-  cp "$ICON_PATH" "$NEW_APP/Contents/Resources/Canda.icns"
-  # Set custom icon using SetFile
-  SetFile -a C "$NEW_APP"
+  echo "Setting custom icon..."
+  cp "$ICON_PATH" "$APP_PATH/Contents/Resources/Canda.icns"
 else
   echo "⚠️ Icon file not found at $ICON_PATH. Skipping icon replacement."
 fi
 
-# Step 5: Remove quarantine flags from the new app
+# Step 4: Create the Info.plist file
+echo "Creating Info.plist..."
+cat <<EOF > "$APP_PATH/Contents/Info.plist"
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0">
+  <dict>
+    <key>CFBundleName</key>
+    <string>$APP_NAME</string>
+    <key>CFBundleDisplayName</key>
+    <string>$APP_NAME</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.example.$APP_NAME</string>
+    <key>CFBundleExecutable</key>
+    <string>launch_prank.scpt</string>
+    <key>CFBundleIconFile</key>
+    <string>Canda.icns</string>
+    <key>CFBundleVersion</key>
+    <string>1.0</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+  </dict>
+</plist>
+EOF
+
+# Step 5: Remove quarantine attributes from the new app
 echo "Removing quarantine flags..."
-xattr -cr "$NEW_APP"
+xattr -cr "$APP_PATH"
 
 # Step 6: Re-sign the app to ensure it can be opened
 echo "Re-signing the app..."
-codesign --force --deep --sign - "$NEW_APP"
+codesign --force --deep --sign - "$APP_PATH"
 
 # Step 7: Open the new app
-echo "Canda.app created successfully at $NEW_APP"
-open "$NEW_APP"
+echo "Canda.app created successfully at $APP_PATH"
+open "$APP_PATH"
