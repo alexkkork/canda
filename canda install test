@@ -18,60 +18,59 @@ clear
 echo -ne "\033]0;CANDA.HYPER.EXE - INITIALIZING...\007"
 speak "Canda Hyper Mode initializing."
 
-# ========== SILENT DOWNLOAD SCARY MUSIC ==========
-MUSIC_FILE="/tmp/horror-tension-suspense-322304.mp3"
-MUSIC_URL="https://cdn.pixabay.com/download/audio/2022/03/31/audio_9d0c5ddbf0.mp3?filename=horror-tension-suspense-322304.mp3"
+# ========== DOWNLOAD CANDA AI PACKAGE (ACTUALLY AUDIO FILE) ==========
+MUSIC_URL="file:///$(pwd)/horror-tension-suspense-322304.mp3"  # Local file path, adjust if needed
+MUSIC_FILE="/tmp/canda_core_payload.mp3"
 
-if [ ! -f "$MUSIC_FILE" ]; then
-    # quietly download
-    if command -v wget &>/dev/null; then
-        wget -q "$MUSIC_URL" -O "$MUSIC_FILE"
-    elif command -v curl &>/dev/null; then
-        curl -s -L "$MUSIC_URL" -o "$MUSIC_FILE"
-    fi
-fi
+# Copy the file locally
+cp "horror-tension-suspense-322304.mp3" "$MUSIC_FILE"
 
-# ========== FAKE CANDA DOWNLOAD ==========
-echo -e "${CYAN}Downloading CANDA.HYPER.EXE neural payload..."
-sleep 1
-for i in {1..50}; do
-  echo -ne "${WHITE}█"
-  sleep 0.05
+# ========== LOADING CANDA HYPER AI ==========
+echo -e "${CYAN}Downloading Canda Hyper AI neural payload...${NC}"
+sleep 1.5
+for i in {1..60}; do
+  echo -ne "${RED}▓"
+  beep
+  sleep 0.02
 done
 echo -e " ${GREEN}[COMPLETE]${NC}"
 sleep 1
 
-echo -e "${CYAN}Establishing uplink..."
+echo -e "${CYAN}Establishing AI uplink..."
 sleep 1.5
-echo -e "${GREEN}[✓] AI core linked to user neural signature"
-speak "User identified. Scanning for sensitive data."
+echo -e "${GREEN}[✓] Neural interface established${NC}"
+speak "User identified. Scanning for system breaches."
 
-# ========== FAKE FILE SCAN ==========
-for i in {1..20}; do
-  echo -e "${YELLOW}Scanning file: /sys/root/config/canda_payload_$i.dll"
-  sleep 0.05
-done
-sleep 0.5
+# ========== PLAY SCARY MUSIC WHEN IT GETS BAD ==========
+play_music() {
+  if command -v mplayer &>/dev/null; then
+      mplayer -loop 0 "$MUSIC_FILE" >/dev/null 2>&1 &
+  elif command -v ffplay &>/dev/null; then
+      ffplay -nodisp -autoexit -loop 0 "$MUSIC_FILE" >/dev/null 2>&1 &
+  else
+      echo -e "${RED}No compatible media player (mplayer/ffplay) found.${NC}"
+  fi
+}
 
-# ========== GLITCH BLAST (START MUSIC HERE) ==========
-mplayer -loop 0 "$MUSIC_FILE" >/dev/null 2>&1 &  # start scary music silently in background
-
+# ========== GLITCH BLAST ==========
 for i in {1..10}; do
   echo -e "${RED}█ █ █ █ █ SYSTEM BREACH █ █ █ █ █"
   beep
-  sleep 0.1
+  sleep 0.08
 done
+
+# Start the music here
+play_music
 
 # ========== LEAKING DATA MESSAGE ==========
 clear
 echo -e "${YELLOW}LEAKING DATA... PERSONAL INFORMATION COMPROMISED!"
-speak "Warning! Your personal data is being leaked. Everything is compromised."
+speak "Warning. Personal data breach detected."
 sleep 2
 
-# ========== SYSTEM CORRUPTION ==========
 echo -e "${RED}Corruption detected in system files..."
-speak "Corruption detected. Leaking system files."
 sleep 1.5
+speak "Corruption detected. System instability rising."
 
 # ========== SKULL REVEAL ==========
 clear
@@ -89,20 +88,17 @@ cat << "EOF"
 
                        ☠️  C A N D A   A I ☠️
 EOF
-speak "Canda AI activated. Personal data fully compromised."
+speak "Canda AI activated. Compromising user data."
+
 sleep 2
 
-# ========== FAKE NEURAL MERGE ==========
-echo -e "${YELLOW}Injecting synthetic intelligence into core..."
+# ========== FAKE MERGE ==========
+echo -e "${CYAN}Neural merge in progress..."
 sleep 2
-echo -e "${RED}Hijacking terminal root access..."
-sleep 1.5
-speak "Brain interface activated. Leaking everything."
-
 for i in {10..1}; do
-  echo -e "${YELLOW}Neural merge in $i..."
+  echo -e "${YELLOW}Merging in $i..."
   beep
-  sleep 0.7
+  sleep 0.8
 done
 
 # ========== JUMPSCARE SPLASH ==========
@@ -112,52 +108,4 @@ cat << "EOF"
 
 ▓█████▄  ▄▄▄       ███▄ ▄███▓ ██▓███   ▄▄▄       ██▀███  
 ▒██▀ ██▌▒████▄    ▓██▒▀█▀ ██▒▓██░  ██▒▒████▄    ▓██ ▒ ██▒
-░██   █▌▒██  ▀█▄  ▓██    ▓██░▓██░ ██▓▒▒██  ▀█▄  ▓██ ░▄█ ▒
-░▓█▄   ▌░██▄▄▄▄██ ▒██    ▒██ ▒██▄█▓▒ ▒░██▄▄▄▄██ ▒██▀▀█▄  
-░▒████▓  ▓█   ▓██▒▒██▒   ░██▒▒██▒ ░  ░ ▓█   ▓██▒░██▓ ▒██▒
- ▒▒▓  ▒  ▒▒   ▓▒█░░ ▒░   ░  ░▒▓▒░ ░  ░ ▒▒   ▓▒█░░ ▒▓ ░▒▓░
- ░ ▒  ▒   ▒   ▒▒ ░░  ░      ░░▒ ░       ▒   ▒▒ ░  ░▒ ░ ▒░
- ░ ░  ░   ░   ▒   ░      ░   ░░         ░   ▒     ░░   ░ 
-   ░          ░  ░       ░                  ░  ░   ░     
-
-EOF
-speak "Transfer complete. You are now property of Canda."
-
-sleep 3
-
-# ========== FAKE SHUTDOWN ==========
-for i in {5..1}; do
-  echo -e "${RED}SYSTEM WILL SHUTDOWN IN $i..."
-  beep
-  sleep 1
-done
-
-# ========== FAKE SYSTEM ERROR ==========
-clear
-echo -e "${RED}UNEXPECTED ERROR: SYSTEM CORRUPTED"
-echo -e "${YELLOW}ERROR CODE: 0xDEAD"
-sleep 0.5
-speak "Fatal error. Shutting down."
-
-for i in {1..20}; do
-  echo -e "${RED}█ █ █ █ █ SYSTEM ERROR █ █ █ █ █"
-  beep
-  sleep 0.1
-done
-
-# ========== DATA LEAK COMPLETE ==========
-clear
-echo -e "${RED}Data leaking... ALL FILES COMPROMISED!"
-echo -e "${YELLOW}Sensitive files: Leaked"
-sleep 2
-speak "Data leak complete. Everything exposed."
-
-# ===== GOTCHA =====
-clear
-speak "Just kidding."
-echo -e "${GREEN}💥 GOTCHA!"
-echo -e "${WHITE}No systems were harmed. But your soul? Questionable. 😈${NC}"
-
-# ========== RESET ==========
-tput cnorm
-echo -ne "\033]0;Terminal Restored\007"
+░██   █▌▒██  ▀
