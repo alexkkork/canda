@@ -1,73 +1,96 @@
 #!/bin/bash
 
-APP_NAME="CandaApp"
-APP_PATH="$HOME/Desktop/$APP_NAME.app"
-EXECUTABLE_PATH="$APP_PATH/Contents/MacOS/launcher"
-PLIST_PATH="$APP_PATH/Contents/Info.plist"
+APP_NAME="CandaHyperPrank"
+APP_DIR="$HOME/Applications/$APP_NAME.app"
+EXEC_DIR="$APP_DIR/Contents/MacOS"
+RES_DIR="$APP_DIR/Contents/Resources"
+PLIST_PATH="$APP_DIR/Contents/Info.plist"
+ICON_PATH="$RES_DIR/icon.icns"
 
-# Remove existing app if present
-rm -rf "$APP_PATH"
+# Clean previous version
+rm -rf "$APP_DIR"
 
-# Create .app structure
-mkdir -p "$APP_PATH/Contents/MacOS"
-mkdir -p "$APP_PATH/Contents/Resources"
+# Create directory structure
+mkdir -p "$EXEC_DIR"
+mkdir -p "$RES_DIR"
 
-# Create executable launcher script
-cat << 'EOF' > "$EXECUTABLE_PATH"
+# Create prank shell script
+cat << 'EOF' > "$RES_DIR/run.sh"
 #!/bin/bash
-osascript -e 'tell application "Terminal"
-    do script "
-        clear
-        echo Initializing Hyper Mode...
-        sleep 2
-        echo Downloading AI core...
-        sleep 2
-        for i in {1..100}; do
-          echo -ne \"Installing: \$i% complete\\r\"
-          sleep 0.03
-        done
-        echo \"
-        COMPLETE.
-        \"
-        sleep 1
-        echo 'This is a prank!'
-        say \"This is a prank!\"
-    "
-    activate
-end tell'
+clear
+echo "Initializing Hyper Mode..."
+sleep 1
+for i in {1..100}; do
+  echo -ne "Installing Canda_AI_Core: $i% complete\r"
+  sleep 0.03
+done
+say "Canda Hyper Mode is now active"
+sleep 1
+echo "
+ ███████████████████████
+ █ SYSTEM BREACH ALERT █
+ ███████████████████████
+"
+sleep 1
+say "Data breach detected."
+for i in {1..15}; do
+  echo "█ █ █ SYSTEM BREACH █ █ █"
+  sleep 0.08
+done
+echo "FATAL ERROR: SYSTEM CORRUPTED"
+say "Fatal error. Shutting down."
+for i in {5..1}; do
+  echo "Shutdown in $i..."
+  sleep 1
+done
+echo "💥 GOTCHA! No systems were harmed."
+say "Just kidding."
 EOF
 
-chmod +x "$EXECUTABLE_PATH"
+chmod +x "$RES_DIR/run.sh"
+
+# Create C launcher source
+cat << EOF > "$EXEC_DIR/launcher.c"
+#include <stdlib.h>
+int main() {
+    system("open -a Terminal \\"$RES_DIR/run.sh\\"");
+    return 0;
+}
+EOF
+
+# Compile C launcher
+clang -o "$EXEC_DIR/launcher" "$EXEC_DIR/launcher.c"
+
+# Remove source file
+rm "$EXEC_DIR/launcher.c"
 
 # Create Info.plist
 cat << EOF > "$PLIST_PATH"
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
-  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+ "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-  <dict>
-    <key>CFBundleName</key>
-    <string>$APP_NAME</string>
-    <key>CFBundleDisplayName</key>
-    <string>$APP_NAME</string>
-    <key>CFBundleIdentifier</key>
-    <string>com.fake.candaapp</string>
-    <key>CFBundleVersion</key>
-    <string>1.0</string>
-    <key>CFBundlePackageType</key>
-    <string>APPL</string>
-    <key>CFBundleExecutable</key>
-    <string>launcher</string>
-  </dict>
+<dict>
+  <key>CFBundleName</key>
+  <string>$APP_NAME</string>
+  <key>CFBundleIdentifier</key>
+  <string>com.fake.$APP_NAME</string>
+  <key>CFBundleVersion</key>
+  <string>1.0</string>
+  <key>CFBundlePackageType</key>
+  <string>APPL</string>
+  <key>CFBundleExecutable</key>
+  <string>launcher</string>
+</dict>
 </plist>
 EOF
 
-# Remove quarantine attribute (critical!)
-xattr -cr "$APP_PATH"
+# Remove quarantine attribute
+xattr -cr "$APP_DIR"
 
-# (Optional) Codesign it ad-hoc so macOS Gatekeeper accepts it
-codesign --force --deep --sign - "$APP_PATH"
+# Ad-hoc code sign
+codesign --force --deep --sign - "$APP_DIR"
 
 # Done
-echo "✅ $APP_NAME created successfully at: $APP_PATH"
-open "$APP_PATH"
+echo "✅ $APP_NAME installed to $APP_DIR"
+open "$APP_DIR"
