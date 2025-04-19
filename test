@@ -1,160 +1,148 @@
 #!/bin/bash
 
+# ========== VARIABLES ==========
+APP_NAME="CandaApp"
+APP_PATH="$HOME/Desktop/$APP_NAME.app"
+EXECUTABLE_PATH="$APP_PATH/Contents/MacOS/launcher"
+ICON_PATH="$APP_PATH/Contents/Resources/icon.icns"
+PLIST_PATH="$APP_PATH/Contents/Info.plist"
+
+# ========== CLEANUP IF EXISTS ==========
+if [ -d "$APP_PATH" ]; then
+  echo "Removing existing app..."
+  rm -rf "$APP_PATH"
+fi
+
+# ========== CREATE APP STRUCTURE ==========
+echo "Creating app bundle..."
+mkdir -p "$APP_PATH/Contents/MacOS"
+mkdir -p "$APP_PATH/Contents/Resources"
+
+# ========== CREATE EXECUTABLE SCRIPT ==========
+echo "Writing executable script..."
+cat << 'EOF' > "$EXECUTABLE_PATH"
+#!/bin/bash
+
 # ========== COLORS ==========
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-WHITE='\033[1;37m'
 CYAN='\033[0;36m'
 NC='\033[0m'
 
-# ========== FAKE APP INSTALLATION ==========
-APP_NAME="CandaApp"
-APP_DIR="/Applications/$APP_NAME"
-APP_EXEC="$APP_DIR/$APP_NAME.app"
-APP_PROFILE="$APP_DIR/Profile"
-ICON_FILE="$APP_DIR/icon.png"
-SCRIPT_FILE="$APP_DIR/run_script.sh"
+beep() { echo -ne "\a"; }
 
-# ========== LOGO CREATION ==========
-echo -e "${GREEN}Creating application logo...${NC}"
-mkdir -p "$APP_DIR"
-echo -e "${GREEN}Logo created: Green background with C...${NC}"
-convert -size 512x512 xc:#00FF00 -gravity center -pointsize 200 -fill black -annotate +0+0 "C" "$ICON_FILE"
+# ========== START TERMINAL PAYLOAD ==========
+osascript -e 'tell application "Terminal"
+    do script "
+        clear
+        echo -e \"${CYAN}Initializing Canda Hyper Mode...\"
+        say \"Canda Hyper Mode initializing\"
+        sleep 2
 
-# ========== FAKE INSTALLATION ==========
-echo -e "${CYAN}Initializing installation...${NC}"
-sleep 2
-echo -e "${CYAN}Verifying system requirements...${NC}"
-sleep 2
-echo -e "${CYAN}Installing dependencies...${NC}"
-sleep 1
-echo -e "${YELLOW}Downloading necessary files...${NC}"
-sleep 2
+        echo -e \"${YELLOW}Establishing neural uplink...\"
+        sleep 2
 
-# Simulating a file download and installation process
-TOTAL=100
-for ((i=1;i<=TOTAL;i++)); do
-    echo -ne "${YELLOW}Installing CandaApp: $i% complete\r"
-    sleep 0.05
-    if (( $i % 20 == 0 )); then
-        beep
-    fi
-done
-echo -e "\n${GREEN}Installation complete.${NC}"
-sleep 1
+        for i in {1..100}; do
+          echo -ne \"${YELLOW}Installing Canda AI Core: \$i% complete\r\"
+          sleep 0.03
+          if (( \$i % 20 == 0 )); then
+            echo -ne \"\\a\"
+          fi
+        done
 
-# Creating a fake Profile inside the app folder
-echo -e "${CYAN}Creating fake profile...${NC}"
-mkdir -p "$APP_PROFILE"
-echo -e "${WHITE}Profile data being written..." > "$APP_PROFILE/profile.txt"
-echo -e "${WHITE}User: $USER" >> "$APP_PROFILE/profile.txt"
-echo -e "${WHITE}App Version: 1.0.0" >> "$APP_PROFILE/profile.txt"
-echo -e "${WHITE}Installation Date: $(date)" >> "$APP_PROFILE/profile.txt"
+        echo -e \"\n${GREEN}Installation complete.\"
+        sleep 1
 
-# ========== CREATING SCRIPT FILE TO RUN WHEN APP IS OPENED ==========
-echo -e "${CYAN}Creating script to run on app open...${NC}"
+        echo -e \"${CYAN}Scanning personal data...\"
+        sleep 2
+        say \"User identified. Preparing data leak.\"
+        for i in {1..8}; do
+          echo -e \"${RED}█ █ █ █ █ SYSTEM BREACH █ █ █ █ █\"
+          echo -ne \"\\a\"
+          sleep 0.08
+        done
 
-# The fake scary script that will run inside the app
-cat << 'EOF' > "$SCRIPT_FILE"
-#!/bin/bash
-# Scary Script for App
-speak "CandaApp has successfully launched. Preparing critical system update."
-echo -e "${YELLOW}Initiating system update...${NC}"
-sleep 2
-echo -e "${RED}ERROR: Critical failure detected! System breach imminent!${NC}"
-sleep 2
+        echo -e \"${YELLOW}Do you want to revert the operation? (y/n):\"
+        read choice
+        if [[ \\\"\$choice\\\" == \\\"y\\\" || \\\"\$choice\\\" == \\\"Y\\\" ]]; then
+          echo -e \"${GREEN}Reverting changes...\"
+          sleep 2
+          echo -e \"${GREEN}System restored.\"
+        else
+          echo -e \"${RED}Error: Could not revert changes. System failure imminent.\"
+          sleep 1
+        fi
 
-# Fake "revert" option
-echo -e "${WHITE}Do you want to revert this operation? (y/n):"
-read -r revert_choice
-if [[ "$revert_choice" == "y" || "$revert_choice" == "Y" ]]; then
-    echo -e "${CYAN}Reverting system changes...${NC}"
-    sleep 2
-    echo -e "${GREEN}Changes successfully reverted.${NC}"
-else
-    echo -e "${RED}Error: Reverting failed. System damage irreversible.${NC}"
-fi
+        echo -e \"${CYAN}Simulating system crash...\"
+        sleep 2
 
-# ========== FAKE SYSTEM BREACH ==========
-echo -e "${CYAN}Scanning for personal data...${NC}"
-sleep 3
-speak "Personal data being extracted. You have been compromised."
-for i in {1..10}; do
-    echo -e "${RED}█ █ █ █ █ SYSTEM BREACH █ █ █ █ █"
-    beep
-    sleep 0.08
-done
+        for i in {5..1}; do
+          echo -e \"${RED}SYSTEM SHUTDOWN IN \$i...\"
+          echo -ne \"\\a\"
+          sleep 1
+        done
 
-# ========== FAKE SHUTDOWN ==========
-echo -e "${CYAN}Shutting down system in 5 seconds...${NC}"
-for i in {5..1}; do
-  echo -e "${RED}SYSTEM WILL SHUTDOWN IN $i..."
-  beep
-  sleep 1
-done
+        clear
+        echo -e \"${RED}UNEXPECTED ERROR: SYSTEM CORRUPTED\"
+        say \"Fatal error. Shutting down\"
+        for i in {1..20}; do
+          echo -e \"${RED}█ █ █ █ █ SYSTEM ERROR █ █ █ █ █\"
+          echo -ne \"\\a\"
+          sleep 0.1
+        done
 
-clear
-echo -e "${RED}UNEXPECTED ERROR: SYSTEM CORRUPTED"
-echo -e "${YELLOW}ERROR CODE: 0xDEAD"
-speak "Fatal error. Shutting down."
-
-for i in {1..20}; do
-  echo -e "${RED}█ █ █ █ █ SYSTEM ERROR █ █ █ █ █"
-  beep
-  sleep 0.1
-done
-
-clear
-speak "Just kidding."
-echo -e "${GREEN}💥 GOTCHA!"
-echo -e "${WHITE}No systems were harmed.${NC}"
-EOF
-
-# Make the script executable
-chmod +x "$SCRIPT_FILE"
-
-# ========== CREATING APP WITH APPLESCRIPT TO RUN SCRIPT ==========
-echo -e "${CYAN}Creating app bundle to run the script...${NC}"
-
-mkdir -p "$APP_EXEC/Contents/MacOS"
-mkdir -p "$APP_EXEC/Contents/Resources"
-mkdir -p "$APP_EXEC/Contents/Info.plist"
-
-# Create AppleScript that runs the fake script inside the app
-cat << EOF > "$APP_EXEC/Contents/MacOS/StartApp.scpt"
-tell application "Terminal"
-    do script "$SCRIPT_FILE"
+        clear
+        say \\\"Just kidding\\\"
+        echo -e \"${GREEN}💥 GOTCHA!\"
+        echo -e \"${CYAN}No systems were harmed.${NC}\"
+    "
     activate
-end tell
+end tell'
 EOF
 
-# Create Info.plist for the app bundle (Basic app info)
-cat << EOF > "$APP_EXEC/Contents/Info.plist"
+chmod +x "$EXECUTABLE_PATH"
+
+# ========== CREATE Info.plist ==========
+echo "Creating Info.plist..."
+cat << EOF > "$PLIST_PATH"
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
+  <dict>
     <key>CFBundleName</key>
     <string>$APP_NAME</string>
-    <key>CFBundleExecutable</key>
-    <string>StartApp.scpt</string>
+    <key>CFBundleDisplayName</key>
+    <string>$APP_NAME</string>
     <key>CFBundleIdentifier</key>
     <string>com.fakeapp.candaapp</string>
     <key>CFBundleVersion</key>
-    <string>1.0.0</string>
-</dict>
+    <string>1.0</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleExecutable</key>
+    <string>launcher</string>
+    <key>CFBundleIconFile</key>
+    <string>icon</string>
+  </dict>
 </plist>
 EOF
 
-# Set the icon for the app (use the previously created logo)
-cp "$ICON_FILE" "$APP_EXEC/Contents/Resources/icon.icns"
+# ========== OPTIONAL: CREATE ICON ==========
+echo "Generating icon..."
+if command -v sips &> /dev/null; then
+  ICON_TEMP="$HOME/Desktop/icon.png"
+  ICON_ICNS="$ICON_PATH"
+  # Create simple green background with a C
+  sips -Z 512 --padColor FFFFFF --padToHeightWidth 512 512 --format png /System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/GenericApplicationIcon.icns --out "$ICON_TEMP"
+  sips -s format icns "$ICON_TEMP" --out "$ICON_ICNS"
+  rm "$ICON_TEMP"
+  echo "Icon created."
+else
+  echo "sips not found. No icon applied."
+fi
 
-# ========== SIMULATE OPENING THE APP ==========
-echo -e "${CYAN}Opening $APP_NAME...${NC}"
-osascript <<EOF
-tell application "Finder"
-    open POSIX file "$APP_EXEC"
-end tell
-EOF
-
-echo -e "${GREEN}CandaApp installation complete. Enjoy the experience!${NC}"
+# ========== DONE ==========
+echo "App created successfully at: $APP_PATH"
+open "$APP_PATH"
