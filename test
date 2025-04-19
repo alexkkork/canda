@@ -1,38 +1,47 @@
 #!/bin/bash
 
-# App names and paths
+# Define paths
 APP_NAME="Canda"
 ORIG_APP="/System/Applications/Utilities/Terminal.app"
 NEW_APP="$HOME/Applications/$APP_NAME.app"
-ICON_PATH="$HOME/Desktop/Canda.icns"  # <-- Path to your Canda.icns icon
+ICON_PATH="$HOME/Desktop/Canda.icns"  # <-- Path to your Canda icon file
 
-# Step 1: Copy the original Terminal app to the new app
-echo "Copying Terminal.app to $NEW_APP..."
-cp -R "$ORIG_APP" "$NEW_APP"
+# Step 1: Create the app directory structure
+echo "Creating app structure..."
+mkdir -p "$NEW_APP/Contents/MacOS"
+mkdir -p "$NEW_APP/Contents/Resources"
 
-# Step 2: Replace the icon with your custom Canda.icns icon
+# Step 2: Copy the original Terminal app into the new app bundle
+echo "Copying original Terminal.app to new app..."
+cp -R "$ORIG_APP" "$NEW_APP/Contents/MacOS/"
+
+# Step 3: Create an AppleScript to launch Terminal
+echo "Creating AppleScript to launch Terminal..."
+cat <<EOF > "$NEW_APP/Contents/MacOS/launch_terminal.scpt"
+do shell script "open -a Terminal"
+EOF
+
+# Step 4: Make sure the AppleScript is executable
+chmod +x "$NEW_APP/Contents/MacOS/launch_terminal.scpt"
+
+# Step 5: Set the custom icon
 if [ -f "$ICON_PATH" ]; then
-  echo "Replacing icon..."
-  # Create necessary folder and copy the icon
-  mkdir -p "$NEW_APP/Contents/Resources"
+  echo "Replacing app icon..."
   cp "$ICON_PATH" "$NEW_APP/Contents/Resources/Terminal.icns"
+  # Set custom icon using SetFile
+  SetFile -a C "$NEW_APP"
 else
-  echo "⚠️  Icon file not found at $ICON_PATH. Make sure the Canda.icns file is on your Desktop."
-  exit 1
+  echo "⚠️ Icon file not found at $ICON_PATH. Skipping icon replacement."
 fi
 
-# Step 3: Set the custom icon for the app (using 'SetFile' command)
-echo "Setting the custom icon..."
-SetFile -a C "$NEW_APP"
-
-# Step 4: Remove any quarantine flags on the new app (avoid 'damaged' warnings)
+# Step 6: Remove quarantine flags from the new app
 echo "Removing quarantine flags..."
 xattr -cr "$NEW_APP"
 
-# Step 5: Re-sign the app to prevent Gatekeeper issues (optional but important)
+# Step 7: Re-sign the app to ensure it can be opened
 echo "Re-signing the app..."
 codesign --force --deep --sign - "$NEW_APP"
 
-# Step 6: Done! Notify user and open the new app
-echo "✅ Canda.app created successfully in $NEW_APP"
+# Step 8: Open the new app
+echo "Canda.app created successfully at $NEW_APP"
 open "$NEW_APP"
