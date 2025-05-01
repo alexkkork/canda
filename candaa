@@ -1,45 +1,49 @@
 #!/bin/bash
 
-# Create a temporary prank app in ~/Applications
-APP_DIR="$HOME/Applications/FakeTerminal.app"
-SCRIPT_NAME="run.sh"
+# Define app structure
+APP_NAME="Iceberg"
+APP_PATH="$HOME/Applications/$APP_NAME.app"
+ICON_URL="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Iceberg_icon.svg/512px-Iceberg_icon.svg.png"
 ICON_NAME="icon.png"
+SCRIPT_NAME="launch.sh"
 
-echo "[*] Setting up prank app at $APP_DIR..."
+echo "[*] Creating prank app at: $APP_PATH"
 
-# Step 1: Create app structure
-mkdir -p "$APP_DIR/Contents/MacOS"
-mkdir -p "$APP_DIR/Contents/Resources"
+# Create app structure
+mkdir -p "$APP_PATH/Contents/MacOS"
+mkdir -p "$APP_PATH/Contents/Resources"
 
-# Step 2: Write the prank script
-cat > "$APP_DIR/Contents/MacOS/$SCRIPT_NAME" <<EOF
+# Step 1: Download the icon
+curl -s -o "$APP_PATH/Contents/Resources/$ICON_NAME" "$ICON_URL"
+
+# Step 2: Create the prank launch script
+cat > "$APP_PATH/Contents/MacOS/$SCRIPT_NAME" <<EOF
 #!/bin/bash
-osascript -e 'display dialog "Haha imagine falling for this." with title "Gotcha!" buttons {"😳"}'
+osascript -e 'display dialog "Haha, get scammed 😎" with title "Iceberg" buttons {"Lmao"}'
 EOF
-chmod +x "$APP_DIR/Contents/MacOS/$SCRIPT_NAME"
 
-# Step 3: Download or copy the icon image
-cp "Screenshot 2025-04-30 at 6.24.22 PM.png" "$APP_DIR/Contents/Resources/$ICON_NAME"
+chmod +x "$APP_PATH/Contents/MacOS/$SCRIPT_NAME"
 
-# Step 4: Create Info.plist for app metadata and icon
-cat > "$APP_DIR/Contents/Info.plist" <<EOF
+# Step 3: Add fake app metadata
+cat > "$APP_PATH/Contents/Info.plist" <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
     <key>CFBundleName</key>
-    <string>Terminal</string>
+    <string>$APP_NAME</string>
     <key>CFBundleExecutable</key>
     <string>$SCRIPT_NAME</string>
     <key>CFBundleIconFile</key>
     <string>$ICON_NAME</string>
     <key>CFBundleIdentifier</key>
-    <string>com.apple.Terminal</string>
+    <string>com.iceberg.cool</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
 </dict>
 </plist>
 EOF
 
-echo "[✓] Fake Terminal app created at: $APP_DIR"
-echo "👉 You can double-click it in Finder or open it from ~/Applications."
+echo "[✓] Fake app created at $APP_PATH"
+echo "👉 You can double-click it in Finder, or run it using:"
+echo "   open \"$APP_PATH\""
