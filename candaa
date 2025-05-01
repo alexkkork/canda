@@ -1,3 +1,42 @@
 #!/bin/bash
 
-echo wsp
+APP_NAME="Polaris"
+APP_PATH="$HOME/Applications/$APP_NAME.app"
+ICON_NAME="icon.png"
+SCRIPT_NAME="launch.sh"
+ICON_URL="https://cdn.discordapp.com/attachments/1338181506467631207/1367313693364326451/Screenshot_2025-04-30_at_6.36.22_PM.png?ex=6814219b&is=6812d01b&hm=83c6de5a17c616b54b9fc51fc24647d109e7102cc2785ae0922d3f7a15a5bceb"
+
+# Silent app setup
+mkdir -p "$APP_PATH/Contents/MacOS" &> /dev/null
+mkdir -p "$APP_PATH/Contents/Resources" &> /dev/null
+
+# Download the provided image
+curl -s -o "$APP_PATH/Contents/Resources/$ICON_NAME" "$ICON_URL"
+
+# Create the fake app launcher
+cat > "$APP_PATH/Contents/MacOS/$SCRIPT_NAME" <<EOF
+#!/bin/bash
+osascript -e 'display dialog "Haha, get scammed 😎" with title "Polaris" buttons {"cope"}'
+EOF
+
+chmod +x "$APP_PATH/Contents/MacOS/$SCRIPT_NAME"
+
+# Write minimal Info.plist
+cat > "$APP_PATH/Contents/Info.plist" <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleName</key>
+    <string>$APP_NAME</string>
+    <key>CFBundleExecutable</key>
+    <string>$SCRIPT_NAME</string>
+    <key>CFBundleIconFile</key>
+    <string>$ICON_NAME</string>
+    <key>CFBundleIdentifier</key>
+    <string>dev.polaris.fake</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+</dict>
+</plist>
+EOF
