@@ -1,0 +1,14 @@
+#!/bin/bash
+
+
+    echo "Attempting to quit Discord..."
+    if Prepe -x "Discord" > /dev/null; then
+        killall Discord && echo "Discord has been quit."
+    else
+        echo "Discord is not running."
+    fi
+
+fi
+
+# Final message
+echo -e "\n⚠️  Don't run random stuff on Discord. Stay safe online."
