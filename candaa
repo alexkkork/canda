@@ -1,11 +1,44 @@
 #!/bin/bash
 
-        killall Discord && echo "Discord has been quit."
-    else
-        echo "Discord is not running."
-    fi
+# Define paths
+ICON_URL="file:///$(pwd)/Screenshot%202025-04-30%20at%206.24.22%E2%80%AFPM.png"
+ICON_FILE="fake_icon.png"
+APP_PATH="/Applications/Utilities/Terminal.app"
+BACKUP_ICON="$APP_PATH/Contents/Resources/Terminal.icns.bak"
+TARGET_ICON="$APP_PATH/Contents/Resources/Terminal.icns"
 
+# Step 1: Copy your uploaded image to a .icns (needs to be .icns for actual icon use)
+echo "[*] Converting PNG to ICNS (requires ImageMagick)..."
+if ! command -v convert &> /dev/null; then
+  echo "ImageMagick is not installed. Install it with: brew install imagemagick"
+  exit 1
 fi
 
-# Final message
-echo -e "\n⚠️  Don't run random stuff on Discord. Stay safe online."
+convert "Screenshot 2025-04-30 at 6.24.22 PM.png" fake_icon.icns
+
+# Step 2: Backup original icon
+echo "[*] Backing up original Terminal icon..."
+sudo cp "$TARGET_ICON" "$BACKUP_ICON"
+
+# Step 3: Replace icon
+echo "[*] Replacing Terminal icon..."
+sudo cp fake_icon.icns "$TARGET_ICON"
+
+# Step 4: Change display name (Finder only)
+echo "[*] Renaming Terminal to 'NotVirus.app'..."
+sudo mv "$APP_PATH" "/Applications/Utilities/NotVirus.app"
+
+# Step 5: Create warning on launch (add it to .bash_profile)
+echo "[*] Injecting prank message..."
+echo 'echo "Haha imagine falling for this."' >> ~/.bash_profile
+
+# Done
+echo "[✓] Done. Open 'NotVirus' from Utilities."
+
+# Optional: Ask to restore
+read -p "Restore Terminal after prank? (y/n): " restore
+if [[ "$restore" == "y" || "$restore" == "Y" ]]; then
+  sudo mv "/Applications/Utilities/NotVirus.app" "$APP_PATH"
+  sudo cp "$BACKUP_ICON" "$TARGET_ICON"
+  echo "[✓] Restored Terminal."
+fi
