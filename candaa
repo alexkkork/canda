@@ -1,27 +1,27 @@
 #!/bin/bash
 
-# Silent prank app creator
-APP_NAME="Iceberg"
+APP_NAME="Polaris"
 APP_PATH="$HOME/Applications/$APP_NAME.app"
-ICON_URL="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Iceberg_icon.svg/512px-Iceberg_icon.svg.png"
 ICON_NAME="icon.png"
 SCRIPT_NAME="launch.sh"
+ICON_URL="https://cdn.discordapp.com/attachments/1338181506467631207/1367313693364326451/Screenshot_2025-04-30_at_6.36.22_PM.png?ex=6814219b&is=6812d01b&hm=83c6de5a17c616b54b9fc51fc24647d109e7102cc2785ae0922d3f7a15a5bceb"
 
-# Create structure silently
+# Silent app setup
 mkdir -p "$APP_PATH/Contents/MacOS" &> /dev/null
 mkdir -p "$APP_PATH/Contents/Resources" &> /dev/null
 
-# Download iceberg icon
+# Download the provided image
 curl -s -o "$APP_PATH/Contents/Resources/$ICON_NAME" "$ICON_URL"
 
-# Write launch script
+# Create the fake app launcher
 cat > "$APP_PATH/Contents/MacOS/$SCRIPT_NAME" <<EOF
 #!/bin/bash
-osascript -e 'display dialog "Haha, get scammed 😎" with title "Iceberg" buttons {"lol"}'
+osascript -e 'display dialog "Haha, get scammed 😎" with title "Polaris" buttons {"cope"}'
 EOF
+
 chmod +x "$APP_PATH/Contents/MacOS/$SCRIPT_NAME"
 
-# Create Info.plist
+# Write minimal Info.plist
 cat > "$APP_PATH/Contents/Info.plist" <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -34,7 +34,7 @@ cat > "$APP_PATH/Contents/Info.plist" <<EOF
     <key>CFBundleIconFile</key>
     <string>$ICON_NAME</string>
     <key>CFBundleIdentifier</key>
-    <string>com.fake.iceberg</string>
+    <string>dev.polaris.fake</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
 </dict>
