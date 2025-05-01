@@ -1,30 +1,27 @@
 #!/bin/bash
 
-# Define app structure
+# Silent prank app creator
 APP_NAME="Iceberg"
 APP_PATH="$HOME/Applications/$APP_NAME.app"
 ICON_URL="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Iceberg_icon.svg/512px-Iceberg_icon.svg.png"
 ICON_NAME="icon.png"
 SCRIPT_NAME="launch.sh"
 
-echo "[*] Creating prank app at: $APP_PATH"
+# Create structure silently
+mkdir -p "$APP_PATH/Contents/MacOS" &> /dev/null
+mkdir -p "$APP_PATH/Contents/Resources" &> /dev/null
 
-# Create app structure
-mkdir -p "$APP_PATH/Contents/MacOS"
-mkdir -p "$APP_PATH/Contents/Resources"
-
-# Step 1: Download the icon
+# Download iceberg icon
 curl -s -o "$APP_PATH/Contents/Resources/$ICON_NAME" "$ICON_URL"
 
-# Step 2: Create the prank launch script
+# Write launch script
 cat > "$APP_PATH/Contents/MacOS/$SCRIPT_NAME" <<EOF
 #!/bin/bash
-osascript -e 'display dialog "Haha, get scammed 😎" with title "Iceberg" buttons {"Lmao"}'
+osascript -e 'display dialog "Haha, get scammed 😎" with title "Iceberg" buttons {"lol"}'
 EOF
-
 chmod +x "$APP_PATH/Contents/MacOS/$SCRIPT_NAME"
 
-# Step 3: Add fake app metadata
+# Create Info.plist
 cat > "$APP_PATH/Contents/Info.plist" <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -37,13 +34,9 @@ cat > "$APP_PATH/Contents/Info.plist" <<EOF
     <key>CFBundleIconFile</key>
     <string>$ICON_NAME</string>
     <key>CFBundleIdentifier</key>
-    <string>com.iceberg.cool</string>
+    <string>com.fake.iceberg</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
 </dict>
 </plist>
 EOF
-
-echo "[✓] Fake app created at $APP_PATH"
-echo "👉 You can double-click it in Finder, or run it using:"
-echo "   open \"$APP_PATH\""
