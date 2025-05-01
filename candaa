@@ -1,8 +1,5 @@
 #!/bin/bash
 
-
-    echo "Attempting to quit Discord..."
-    if Prepe -x "Discord" > /dev/null; then
         killall Discord && echo "Discord has been quit."
     else
         echo "Discord is not running."
