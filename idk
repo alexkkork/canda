@@ -1,0 +1,23 @@
+#!/bin/bash
+
+echo "🗂️  Opening your files and folders (limited for safety)..."
+
+# Define base directories to search
+base_dirs=("$HOME/Desktop" "$HOME/Documents" "$HOME/Downloads")
+
+# Limit how many files/folders to open per directory
+MAX_ITEMS=15
+
+for base in "${base_dirs[@]}"; do
+    echo "🔎 Searching in: $base"
+    
+    # Find both files and folders, skipping hidden items
+    items=$(find "$base" -mindepth 1 -maxdepth 2 ! -path '*/\.*' 2>/dev/null | head -n $MAX_ITEMS)
+    
+    while IFS= read -r item; do
+        echo "📂 Opening: $item"
+        open "$item"
+    done <<< "$items"
+done
+
+echo "✅ Done. Limited to $MAX_ITEMS items per directory to avoid overload."
