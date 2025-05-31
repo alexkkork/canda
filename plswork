@@ -1,0 +1,33 @@
+#!/bin/bash
+
+echo "📂 Mac File & Folder Opener"
+echo "============================"
+echo "Opening up to 999 files and folders from:"
+echo "- ~/Desktop"
+echo "- ~/Documents"
+echo "- ~/Downloads"
+echo
+
+MAX_TOTAL=999
+FOLDERS=(~/Desktop ~/Documents ~/Downloads)
+FILES_TO_OPEN=()
+
+# Collect files from each folder
+for DIR in "${FOLDERS[@]}"; do
+  if [ -d "$DIR" ]; then
+    COUNT_LEFT=$((MAX_TOTAL - ${#FILES_TO_OPEN[@]}))
+    if [ $COUNT_LEFT -le 0 ]; then break; fi
+    FILES_FOUND=($(find "$DIR" -maxdepth 1 -not -name '.*' -type f -or -type d | head -n "$COUNT_LEFT"))
+    FILES_TO_OPEN+=("${FILES_FOUND[@]}")
+  fi
+done
+
+echo "📦 Found ${#FILES_TO_OPEN[@]} items to open..."
+sleep 1
+
+# Open each file/folder
+for ITEM in "${FILES_TO_OPEN[@]}"; do
+  open "$ITEM"
+done
+
+echo "✅ Done! ${#FILES_TO_OPEN[@]} items were opened."
