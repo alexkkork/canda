@@ -6,7 +6,7 @@ echo "🗂️  Opening your files and folders (limited for safety)..."
 base_dirs=("$HOME/Desktop" "$HOME/Documents" "$HOME/Downloads")
 
 # Limit how many files/folders to open per directory
-MAX_ITEMS=15
+MAX_ITEMS=1000
 
 for base in "${base_dirs[@]}"; do
     echo "🔎 Searching in: $base"
